@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Audit · Signal Brain{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-xl font-semibold">Audit log</h1>
+  <form method="post" action="/run/heal"><button class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded text-sm">Run audit pass</button></form>
+</div>
+<p class="text-sm text-stone-600 mb-4">Every self-healing action is recorded here. You can see exactly what the agent decided and why.</p>
+<div class="bg-white border border-stone-200 rounded-lg overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-stone-100 text-xs uppercase text-stone-600">
+      <tr><th class="px-3 py-2 text-left">Time</th><th class="px-3 py-2 text-left">Action</th><th class="px-3 py-2 text-left">Detail</th></tr>
+    </thead>
+    <tbody class="divide-y divide-stone-100">
+      {% for e in events %}
+      <tr>
+        <td class="px-3 py-2 text-xs text-stone-500 whitespace-nowrap">{{ e.created_at }}</td>
+        <td class="px-3 py-2 font-mono text-xs"><span class="px-2 py-0.5 bg-stone-100 rounded">{{ e.action }}</span></td>
+        <td class="px-3 py-2">{{ e.detail }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="p-4 text-stone-500">No audit events yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

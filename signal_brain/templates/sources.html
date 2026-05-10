@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Sources · Signal Brain{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Sources</h1>
+
+<section class="mb-6 bg-white border border-stone-200 rounded-lg p-4">
+  <h2 class="font-medium text-sm mb-3">Add source</h2>
+  <form method="post" action="/sources/add" class="grid md:grid-cols-4 gap-2">
+    <select name="kind" class="border border-stone-300 rounded px-2 py-1 text-sm">
+      <option value="hackernews">hackernews</option>
+      <option value="reddit">reddit</option>
+      <option value="rss">rss</option>
+      <option value="bluesky">bluesky</option>
+    </select>
+    <input name="handle" placeholder="handle (e.g. 'top', 'startups', URL, query)" class="border border-stone-300 rounded px-2 py-1 text-sm md:col-span-2" required>
+    <button class="bg-stone-900 hover:bg-stone-800 text-white text-sm rounded px-3">Add</button>
+  </form>
+  <p class="text-xs text-stone-500 mt-2">Handle examples — hackernews: <code>top</code>·<code>best</code>·<code>new</code> · reddit: <code>startups</code>·<code>sales</code> · rss: full feed URL · bluesky: search query</p>
+</section>
+
+<table class="w-full text-sm bg-white border border-stone-200 rounded-lg overflow-hidden">
+  <thead class="bg-stone-100 text-xs uppercase text-stone-600">
+    <tr><th class="text-left px-3 py-2">Kind</th><th class="text-left px-3 py-2">Handle</th><th class="text-left px-3 py-2">Reliability</th><th class="text-left px-3 py-2">Items</th><th class="text-left px-3 py-2">Last fetch</th><th class="px-3 py-2">Status</th></tr>
+  </thead>
+  <tbody class="divide-y divide-stone-100">
+    {% for s in sources %}
+    <tr class="{% if not s.enabled %}opacity-50{% endif %}">
+      <td class="px-3 py-2 font-mono text-xs">{{ s.kind }}</td>
+      <td class="px-3 py-2">{{ s.handle }}</td>
+      <td class="px-3 py-2">{{ "%.2f"|format(s.reliability) }}</td>
+      <td class="px-3 py-2">{{ s.items }}</td>
+      <td class="px-3 py-2 text-xs text-stone-500">{{ s.last_fetch_at or "—" }}</td>
+      <td class="px-3 py-2 text-right"><form method="post" action="/sources/{{ s.id }}/toggle"><button class="text-xs underline">{{ "Disable" if s.enabled else "Enable" }}</button></form></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="p-4 text-stone-500">No sources yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

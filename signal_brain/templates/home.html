@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Signal Brain — Home{% endblock %}
+{% block content %}
+<div class="grid md:grid-cols-3 gap-3 mb-6">
+  <form method="post" action="/run/ingest"><button class="w-full bg-stone-900 hover:bg-stone-800 text-white px-4 py-3 rounded-lg text-sm">Ingest now</button></form>
+  <form method="post" action="/run/heal"><button class="w-full bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-3 rounded-lg text-sm">Self-heal now</button></form>
+  <form method="post" action="/run/suggest"><button class="w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-3 rounded-lg text-sm">Generate posts</button></form>
+</div>
+
+{% if not profile %}
+<div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+  <p class="text-sm">No user profile yet. <a href="/profile" class="underline text-amber-800">Set one up</a> so post suggestions are tailored.</p>
+</div>
+{% endif %}
+
+<section class="grid md:grid-cols-2 gap-6">
+  <div>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Top trends</h2>
+    <div class="bg-white rounded-lg border border-stone-200 divide-y divide-stone-100">
+      {% for t in trends[:10] %}
+      <div class="px-4 py-2 flex items-center gap-3">
+        <span class="font-mono text-xs text-emerald-700 w-12">{{ "%.2f"|format(t.momentum) }}</span>
+        <span class="flex-1 text-sm">{{ t.name }}</span>
+        <span class="text-xs text-stone-400">{{ t.occurrences }}×</span>
+      </div>
+      {% else %}
+      <div class="p-4 text-sm text-stone-500">No trends yet — click <em>Ingest now</em>.</div>
+      {% endfor %}
+    </div>
+  </div>
+  <div>
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-stone-500 mb-2">Latest suggestions</h2>
+    <div class="space-y-2">
+      {% for s in suggestions %}
+      <a href="/suggestions" class="block bg-white rounded-lg border border-stone-200 p-3 hover:border-emerald-400">
+        <div class="text-xs text-stone-500 flex justify-between">
+          <span>{{ s.kind }}</span>
+          <span>{{ s.created_at }}</span>
+        </div>
+        <div class="font-medium text-sm mt-1">{{ s.headline }}</div>
+        <div class="text-sm text-stone-600 mt-1 line-clamp-2">{{ s.body[:160] }}</div>
+      </a>
+      {% else %}
+      <div class="bg-white rounded-lg border border-stone-200 p-4 text-sm text-stone-500">No suggestions yet — click <em>Generate posts</em>.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

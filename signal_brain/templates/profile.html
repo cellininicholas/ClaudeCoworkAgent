@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Profile · Signal Brain{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Your profile</h1>
+<p class="text-sm text-stone-600 mb-4">This is the only thing the agent uses to tailor post drafts to you. Be specific — generic input, generic output.</p>
+<form method="post" action="/profile" class="space-y-3 bg-white border border-stone-200 rounded-lg p-4">
+  <div class="grid md:grid-cols-3 gap-3">
+    <label class="block">
+      <span class="text-xs text-stone-500">Name</span>
+      <input name="name" required class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm" value="{{ profile.name or '' }}">
+    </label>
+    <label class="block">
+      <span class="text-xs text-stone-500">Role</span>
+      <input name="role" required placeholder="Founder · Head of Sales · PM" class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm" value="{{ profile.role or '' }}">
+    </label>
+    <label class="block">
+      <span class="text-xs text-stone-500">Company</span>
+      <input name="company" class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm" value="{{ profile.company or '' }}">
+    </label>
+  </div>
+  <label class="block">
+    <span class="text-xs text-stone-500">Bio (the story you want to tell publicly)</span>
+    <textarea name="bio" required rows="4" class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm">{{ profile.bio or '' }}</textarea>
+  </label>
+  <label class="block">
+    <span class="text-xs text-stone-500">Interests (comma-separated topic seeds)</span>
+    <input name="interests" required class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm" value="{{ profile.interests or '' }}">
+  </label>
+  <label class="block">
+    <span class="text-xs text-stone-500">Voice notes (how you like to write — tone, dos, don'ts)</span>
+    <textarea name="voice_notes" rows="3" class="mt-1 w-full border border-stone-300 rounded px-2 py-1.5 text-sm">{{ profile.voice_notes or '' }}</textarea>
+  </label>
+  <button class="bg-stone-900 hover:bg-stone-800 text-white px-4 py-2 rounded text-sm">Save</button>
+</form>
+{% endblock %}

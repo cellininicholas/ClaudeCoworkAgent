@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Signal Brain{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .pill { @apply inline-block text-xs px-2 py-0.5 rounded-full; }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+<header class="border-b border-stone-200 bg-white">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="/" class="font-mono text-emerald-700 font-semibold">signal_brain</a>
+    <nav class="flex gap-4 text-sm">
+      <a href="/" class="hover:text-emerald-700">Home</a>
+      <a href="/trends" class="hover:text-emerald-700">Trends</a>
+      <a href="/suggestions" class="hover:text-emerald-700">Suggestions</a>
+      <a href="/sources" class="hover:text-emerald-700">Sources</a>
+      <a href="/audit" class="hover:text-emerald-700">Audit</a>
+      <a href="/profile" class="hover:text-emerald-700">Profile</a>
+    </nav>
+    <div class="ml-auto flex gap-2 text-xs text-stone-500">
+      <span>{{ stats.items }} items</span>·
+      <span>{{ stats.claims }} claims</span>·
+      <span>{{ stats.concepts }} concepts</span>·
+      <span>{{ stats.pending_suggestions }} pending</span>
+    </div>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  {% block content %}{% endblock %}
+</main>
+<footer class="max-w-6xl mx-auto px-4 py-6 text-xs text-stone-400">
+  Signal Brain · self-healing knowledge agent · runs locally
+</footer>
+</body>
+</html>
