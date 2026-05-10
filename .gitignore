@@ -7,12 +7,15 @@ venv/
 *.db
 *.sqlite
 *.sqlite3
-data/*.db
+*.db-journal
+*.db-wal
+*.db-shm
+# user knowledge base lives here — never commit
+data/
 .DS_Store
 .idea/
 .vscode/
 node_modules/
 .cache/
-*.db-journal
-*.db-wal
-*.db-shm
+# editor backups
+*~
