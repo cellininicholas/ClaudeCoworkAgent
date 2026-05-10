@@ -72,12 +72,14 @@ If any step fails, write a short note to `audit_log` via the existing scripts an
 - Don't store API keys in the repo. They live in `.env`, gitignored.
 - Don't widen the schema without updating `schema.sql` AND adding a migration block in `db.py::init_db` (currently CREATE IF NOT EXISTS — fine for additive changes, NOT fine for column drops).
 
-## Slash commands
+## Project skills (slash commands)
 
-- `/setup` — interactive first-run setup. Walks the user through provider choice, profile creation, source config, scheduled-task wiring, and dashboard artifact. **Runs entirely in Cowork — no terminal needed for Cowork mode.**
-- `/cycle` — runs one full agent cycle (the steps above). Use this for ad-hoc runs and as the body of the Cowork scheduled task.
-- `/status` — print a status summary directly in chat. No artifact, no web server — just text.
-- `/view` — create or refresh the **signal-brain** Cowork live artifact (the dashboard). The artifact persists across sessions and pulls fresh data from `scripts/*.py` every time it's opened. This is the primary way users see their agent's state.
+The project ships four Markdown skills in `.claude/commands/`. Users can invoke them either as slash commands (`/setup`) or by asking Claude in plain English ("run the setup project skill"). The plain-English form is preferred in user-facing docs because slash-command autocomplete for project-scoped commands isn't reliable in every Cowork build.
+
+- **setup** (`/setup`) — interactive first-run setup. Walks the user through provider choice, profile creation, source config, scheduled-task wiring, and dashboard artifact. Runs entirely in Cowork — no terminal needed for Cowork mode.
+- **cycle** (`/cycle`) — runs one full agent cycle (the steps above). Use this for ad-hoc runs and as the body of the Cowork scheduled task.
+- **status** (`/status`) — print a status summary directly in chat. No artifact, no web server — just text.
+- **view** (`/view`) — create or refresh the **signal-brain** Cowork live artifact (the dashboard). The artifact persists across sessions and pulls fresh data from `scripts/*.py` every time it's opened. This is the primary way users see their agent's state.
 
 ## File map (curated)
 

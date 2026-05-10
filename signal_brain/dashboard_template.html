@@ -10,29 +10,23 @@
     body {
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: #fafaf9;
-      color: #292524;
-      font-size: 14px;
-      line-height: 1.5;
+      background: #fafaf9; color: #292524; font-size: 14px; line-height: 1.5;
     }
     .container { max-width: 980px; margin: 0 auto; padding: 16px; }
     header {
       display: flex; align-items: center; gap: 16px;
-      padding: 12px 16px; background: #fff;
-      border-bottom: 1px solid #e7e5e4;
+      padding: 12px 16px; background: #fff; border-bottom: 1px solid #e7e5e4;
     }
     header h1 {
       margin: 0; font-size: 16px; font-weight: 600;
-      font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      color: #047857;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace; color: #047857;
     }
     .stats { margin-left: auto; display: flex; gap: 12px; font-size: 12px; color: #78716c; }
     .stats span strong { color: #292524; font-weight: 600; }
     .nav { display: flex; gap: 4px; padding: 0 16px; background: #fff; border-bottom: 1px solid #e7e5e4; }
     .nav button {
-      background: none; border: none; padding: 10px 14px;
-      font: inherit; cursor: pointer; color: #57534e;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      background: none; border: none; padding: 10px 14px; font: inherit; cursor: pointer;
+      color: #57534e; border-bottom: 2px solid transparent; margin-bottom: -1px;
     }
     .nav button:hover { color: #292524; }
     .nav button.active { color: #047857; border-bottom-color: #047857; }
@@ -40,17 +34,13 @@
     .panel.active { display: block; }
     h2 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
          color: #78716c; margin: 0 0 10px; }
-    .card {
-      background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
-      padding: 14px; margin-bottom: 12px;
-    }
-    .card-row { display: flex; align-items: center; gap: 12px; padding: 8px 0;
-                border-bottom: 1px solid #f5f5f4; }
+    .card { background: #fff; border: 1px solid #e7e5e4; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+    .card-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f5f5f4; }
     .card-row:last-child { border-bottom: none; }
     .momentum {
-      font-family: ui-monospace, monospace; font-size: 11px;
-      color: #047857; background: #ecfdf5; padding: 2px 6px;
-      border-radius: 4px; min-width: 44px; text-align: center;
+      font-family: ui-monospace, monospace; font-size: 11px; color: #047857;
+      background: #ecfdf5; padding: 2px 6px; border-radius: 4px;
+      min-width: 44px; text-align: center;
     }
     .pill { display: inline-block; font-size: 11px; padding: 2px 8px;
             background: #f5f5f4; color: #57534e; border-radius: 999px; }
@@ -85,19 +75,34 @@
     a { color: #047857; text-decoration: none; }
     a:hover { text-decoration: underline; }
     .empty { padding: 24px; text-align: center; color: #a8a29e; font-size: 13px; }
-    .loading { padding: 24px; text-align: center; color: #a8a29e; font-size: 13px; }
-    .error { padding: 12px; background: #fef2f2; color: #991b1b;
-             border: 1px solid #fecaca; border-radius: 6px; font-size: 13px; }
     .kicker { font-size: 13px; color: #57534e; margin-bottom: 16px; }
     details summary { cursor: pointer; font-weight: 500; padding: 4px 0; }
     code.inline { background: #f5f5f4; padding: 1px 5px; border-radius: 3px;
                   font-family: ui-monospace, monospace; font-size: 12px; }
-    .evidence { margin-top: 8px; padding-left: 14px;
-                border-left: 2px solid #e7e5e4; font-size: 12px; }
-    .evidence > div { margin: 4px 0; }
-    .evidence a { display: block; color: #78716c; }
-    .stale { background: #fffbeb; border-color: #fde68a; padding: 10px 14px;
-             border-radius: 6px; font-size: 13px; color: #92400e; margin-bottom: 12px; }
+    .evidence { margin-top: 8px; padding-left: 14px; border-left: 2px solid #e7e5e4; font-size: 12px; }
+    .evidence > div { margin: 6px 0; }
+    .evidence a.src { display: inline; color: #78716c; }
+    .evidence a.src:hover { color: #047857; }
+    .evidence .src-title { color: #57534e; }
+    .stance { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+    .stance.positive { background: #ecfdf5; color: #047857; }
+    .stance.negative { background: #fef2f2; color: #b91c1c; }
+    .stance.neutral  { background: #f5f5f4; color: #57534e; }
+    .trend-dates { font-size: 11px; color: #a8a29e; margin-left: 10px; font-weight: 400; }
+    .suggestion.clickable { cursor: pointer; transition: box-shadow 0.15s; }
+    .suggestion.clickable:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-color: #a7f3d0; }
+    .suggestion.flash { animation: flash 1.4s ease-out; }
+    @keyframes flash { 0% { box-shadow: 0 0 0 3px #a7f3d0; } 100% { box-shadow: 0 0 0 0 transparent; } }
+    .firstrun { background: linear-gradient(135deg, #ecfdf5, #fff);
+                border: 1px solid #a7f3d0; padding: 28px 24px; border-radius: 12px; margin-bottom: 20px; }
+    .firstrun h3 { margin: 0 0 6px; font-size: 18px; color: #064e3b; }
+    .firstrun p { margin: 6px 0 14px; color: #1c1917; font-size: 14px; }
+    .firstrun ol { margin: 12px 0 0; padding-left: 22px; font-size: 13px; color: #1f2937; }
+    .firstrun ol li { margin: 4px 0; }
+    .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+             background: #1c1917; color: #fff; padding: 10px 16px; border-radius: 6px;
+             font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 999; }
+    .refresh-note { font-size: 12px; color: #78716c; margin-left: 8px; }
   </style>
 </head>
 <body>
@@ -111,7 +116,7 @@
 <nav class="nav">
   <button data-tab="overview" class="active">Overview</button>
   <button data-tab="trends">Trends</button>
-  <button data-tab="suggestions">Suggestions</button>
+  <button data-tab="suggestions">Drafts</button>
   <button data-tab="sources">Sources</button>
   <button data-tab="audit">Audit</button>
 </nav>
@@ -119,20 +124,18 @@
 <main class="container">
   <section id="panel-overview" class="panel active">
     <p class="kicker">
-      Signal Brain reads what's happening online, builds a memory of trends, and drafts
-      social posts in your voice every cycle. This page reflects whatever the agent has
-      learned so far. Type <code class="inline">/cycle</code> in chat to run on demand,
-      or wait for the scheduled task.
+      Signal Brain reads what's happening online, builds a memory of trends, and drafts social posts in your voice every cycle.
+      To refresh this snapshot, ask Claude to <strong>run the view project skill</strong>.
     </p>
     <div id="staleness"></div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
       <div>
         <h2>Top trends</h2>
-        <div id="overview-trends" class="card"><div class="loading">Loading…</div></div>
+        <div id="overview-trends" class="card"></div>
       </div>
       <div>
         <h2>Latest drafts</h2>
-        <div id="overview-suggestions"><div class="loading">Loading…</div></div>
+        <div id="overview-suggestions"></div>
       </div>
     </div>
   </section>
@@ -140,30 +143,28 @@
   <section id="panel-trends" class="panel">
     <h2>Trends — what the agent thinks is moving</h2>
     <p class="kicker">
-      Momentum is a decaying score: recent claims weigh more, old ones fade
-      (7-day half-life). When two sources contradict, the more reliable one wins
-      and the loser is marked superseded — see Audit.
+      Momentum is a decaying score: recent claims weigh more, old ones fade (7-day half-life).
+      When two sources contradict, the more reliable one wins and the loser is marked superseded — see Audit.
     </p>
-    <div id="trends-list"><div class="loading">Loading…</div></div>
+    <div id="trends-list"></div>
   </section>
 
   <section id="panel-suggestions" class="panel">
     <h2>Drafts</h2>
     <p class="kicker">
-      Three drafts per cycle: a ride-the-trend, a contrarian angle, and a
-      callback (an older trend re-emerging). Accept/reject feeds the
-      self-healing layer — accepting nudges the contributing sources up, rejecting nudges them down.
+      Three drafts per cycle: ride-the-trend, contrarian, and a callback (older trend re-emerging).
+      Accept/reject sends a message to your Cowork chat; Claude there records the feedback and the next
+      heal pass nudges source reliability.
     </p>
-    <div id="suggestions-list"><div class="loading">Loading…</div></div>
+    <div id="suggestions-list"></div>
   </section>
 
   <section id="panel-sources" class="panel">
     <h2>Sources</h2>
     <p class="kicker">
-      Reliability evolves with your accept/reject feedback. Items shows how
-      many raw items the agent has pulled from each source.
+      Reliability evolves with your accept/reject feedback. Items shows how many raw items the agent has pulled from each source.
     </p>
-    <div id="sources-list"><div class="loading">Loading…</div></div>
+    <div id="sources-list"></div>
   </section>
 
   <section id="panel-audit" class="panel">
@@ -171,53 +172,18 @@
     <p class="kicker">
       No black box. Each row records what the agent decided, when, and why.
     </p>
-    <div id="audit-list"><div class="loading">Loading…</div></div>
+    <div id="audit-list"></div>
   </section>
 </main>
 
 <script>
-const REPO_PATH = "__SB_REPO_PATH__";
+// Snapshot is baked in at artifact-creation time by the view skill. Re-run view to refresh.
+const SNAPSHOT = __SB_SNAPSHOT__;
 
-// ----- bash helper --------------------------------------------------------
-
-async function runScript(scriptArgs) {
-  const command = `cd '${REPO_PATH}' && python3 scripts/${scriptArgs}`;
-  const result = await window.cowork.callMcpTool("mcp__workspace__bash", { command });
-  return extractStdout(result);
-}
-
-// MCP tool returns vary in shape — handle the common forms.
-function extractStdout(r) {
-  if (r == null) return "";
-  if (typeof r === "string") return r;
-  if (typeof r.output === "string") return r.output;
-  if (typeof r.stdout === "string") return r.stdout;
-  if (typeof r.text === "string") return r.text;
-  if (Array.isArray(r.content)) {
-    return r.content.map(c => (c && c.text) || (typeof c === "string" ? c : "")).join("");
-  }
-  return JSON.stringify(r);
-}
-
-// Bash output may include warnings/log lines around the JSON body — grab last
-// JSON object/array seen in the stream.
-function parseJson(s) {
-  if (!s) return null;
-  s = String(s).trim();
-  try { return JSON.parse(s); } catch (_) {}
-  // fall back: pull the last {...} or [...] block
-  const match = s.match(/(\{[\s\S]*\}|\[[\s\S]*\])\s*$/);
-  if (match) {
-    try { return JSON.parse(match[1]); } catch (_) {}
-  }
-  return null;
-}
-
-// ----- rendering ----------------------------------------------------------
+// ----- helpers -------------------------------------------------------------
 
 function fmtTime(s) {
   if (!s) return "—";
-  // Treat naive timestamps as UTC
   const d = new Date(/Z$|\+/.test(s) ? s : s + "Z");
   if (isNaN(d)) return s;
   const diff = (Date.now() - d.getTime()) / 1000;
@@ -230,74 +196,118 @@ function fmtTime(s) {
 
 function escapeHtml(s) {
   if (s == null) return "";
-  return String(s).replace(/[&<>"']/g, c => (
-    {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]
-  ));
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
-async function loadStatus() {
-  const out = parseJson(await runScript("status.py")) || {};
-  const stats = document.getElementById("header-stats");
-  stats.innerHTML = `
-    <span><strong>${out.raw_items ?? 0}</strong> items</span>
-    <span><strong>${out.active_claims ?? 0}</strong> claims</span>
-    <span><strong>${out.concepts ?? 0}</strong> concepts</span>
-    <span><strong>${out.pending_suggestions ?? 0}</strong> drafts pending</span>`;
-  const meta = document.getElementById("header-meta");
-  meta.textContent = `last refreshed ${fmtTime(new Date().toISOString())}`;
+function showToast(msg) {
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
 
-  // staleness banner
+// ----- renderers (read from SNAPSHOT) --------------------------------------
+
+function renderHeader() {
+  const s = SNAPSHOT.stats || {};
+  document.getElementById("header-stats").innerHTML = `
+    <span><strong>${s.raw_items ?? 0}</strong> items</span>
+    <span><strong>${s.active_claims ?? 0}</strong> claims</span>
+    <span><strong>${s.concepts ?? 0}</strong> concepts</span>
+    <span><strong>${s.pending_suggestions ?? 0}</strong> drafts pending</span>`;
+  const meta = document.getElementById("header-meta");
+  meta.innerHTML = `snapshot ${fmtTime(SNAPSHOT.generated_at)}<span class="refresh-note">— ask Claude to run the view skill to refresh</span>`;
+}
+
+function renderOverview() {
   const stale = document.getElementById("staleness");
-  const last = (out.recent_audit || []).find(a => a.action === "ingest" || a.action === "decay");
-  if (out.raw_items === 0) {
-    stale.innerHTML = `<div class="stale">No data yet. Run <code class="inline">/cycle</code> in chat to do a first pass, or wait for the scheduled task.</div>`;
-  } else if (last && (Date.now() - new Date(last.created_at + "Z")) > 86400*1000) {
-    stale.innerHTML = `<div class="stale">Last cycle was over a day ago. The scheduled task may not be firing — check it in your Cowork settings.</div>`;
+  const lastIngest = (SNAPSHOT.audit || []).find(a => a.action === "ingest" || a.action === "decay");
+  if ((SNAPSHOT.stats?.raw_items ?? 0) === 0) {
+    stale.innerHTML = `
+      <div class="firstrun">
+        <h3>Welcome — your agent is set up but it hasn't run a cycle yet.</h3>
+        <p>To populate this dashboard, ask Claude in your Cowork chat:</p>
+        <p style="font-family:ui-monospace,monospace;background:#fff;border:1px solid #a7f3d0;padding:10px 14px;border-radius:6px;font-size:13px;color:#064e3b;">"Run the cycle project skill"</p>
+        <p style="font-size:13px">The cycle will: fetch fresh items via WebFetch · extract claims/concepts · run the self-heal pass · draft 3 social posts.</p>
+        <p style="margin-top:14px;font-size:12px;color:#475569">After it finishes, ask Claude to run the <strong>view</strong> project skill again to refresh this snapshot.</p>
+      </div>`;
+  } else if (lastIngest && (Date.now() - new Date(lastIngest.created_at + "Z")) > 86400*1000) {
+    stale.innerHTML = `<div class="firstrun" style="background:#fffbeb;border-color:#fde68a"><p style="margin:0;color:#92400e">Last cycle was over a day ago. The scheduled task may not be firing — ask Claude to <strong>run the cycle project skill</strong>.</p></div>`;
   } else {
     stale.innerHTML = "";
   }
 
-  // overview top trends
+  const trends = SNAPSHOT.trends || [];
   const trendsBox = document.getElementById("overview-trends");
-  if (!out.top_trends || out.top_trends.length === 0) {
-    trendsBox.innerHTML = `<div class="empty">No trends yet.</div>`;
-  } else {
-    trendsBox.innerHTML = out.top_trends.slice(0, 8).map(t => `
-      <div class="card-row">
-        <span class="momentum">${(t.momentum ?? 0).toFixed(2)}</span>
-        <span style="flex:1">${escapeHtml(t.name)}</span>
-      </div>`).join("");
-  }
+  trendsBox.innerHTML = trends.length
+    ? trends.slice(0, 8).map(t => `
+        <div class="card-row">
+          <span class="momentum">${(t.momentum ?? 0).toFixed(2)}</span>
+          <span style="flex:1">${escapeHtml(t.name)}</span>
+          <span class="row-meta">${t.occurrences ?? 0}×</span>
+        </div>`).join("")
+    : `<div class="empty">No trends yet.</div>`;
+
+  const sugs = SNAPSHOT.suggestions || [];
+  const sugBox = document.getElementById("overview-suggestions");
+  sugBox.innerHTML = sugs.length
+    ? sugs.slice(0, 4).map(s => `
+        <div class="suggestion clickable${s.feedback ? " " + s.feedback : ""}" data-jump-id="${s.id}" title="Open this draft">
+          <div class="row-meta">
+            <span class="pill kind">${escapeHtml(s.kind)}</span>
+            ${s.callback_to ? `<span class="pill callback">callback → ${escapeHtml(s.callback_to)}</span>` : ""}
+            <span style="float:right">${fmtTime(s.created_at)}</span>
+          </div>
+          <h3>${escapeHtml(s.headline)}</h3>
+          <p class="body">${escapeHtml((s.body||"").slice(0, 220))}${(s.body||"").length > 220 ? "…" : ""}</p>
+        </div>`).join("")
+    : `<div class="empty">No drafts yet.</div>`;
+
+  sugBox.querySelectorAll("[data-jump-id]").forEach(el => {
+    el.addEventListener("click", () => jumpToDraft(el.dataset.jumpId));
+  });
 }
 
-async function loadOverviewSuggestions() {
-  const list = parseJson(await runScript("list_suggestions.py --limit 4")) || [];
-  const box = document.getElementById("overview-suggestions");
-  if (!list.length) { box.innerHTML = `<div class="empty">No drafts yet.</div>`; return; }
-  box.innerHTML = list.map(s => `
-    <div class="suggestion${s.feedback ? " " + s.feedback : ""}">
-      <div class="row-meta">
-        <span class="pill kind">${escapeHtml(s.kind)}</span>
-        ${s.callback_to ? `<span class="pill callback">callback → ${escapeHtml(s.callback_to)}</span>` : ""}
-        <span style="float:right">${fmtTime(s.created_at)}</span>
-      </div>
-      <h3>${escapeHtml(s.headline)}</h3>
-      <p class="body">${escapeHtml((s.body||"").slice(0, 220))}${(s.body||"").length > 220 ? "…" : ""}</p>
-    </div>`).join("");
+function jumpToDraft(id) {
+  showTab("suggestions");
+  // wait one frame for the panel to render, then scroll & flash
+  requestAnimationFrame(() => {
+    const target = document.querySelector(`#suggestions-list article[data-id="${id}"]`);
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.classList.add("flash");
+    setTimeout(() => target.classList.remove("flash"), 1500);
+  });
 }
 
-async function loadTrends() {
-  const out = parseJson(await runScript("list_concepts.py --with-claims --limit 50")) || [];
+function renderTrends() {
+  const trends = SNAPSHOT.trends || [];
   const box = document.getElementById("trends-list");
-  if (!out.length) { box.innerHTML = `<div class="empty">No trends yet — run /cycle to do a pass.</div>`; return; }
-  box.innerHTML = out.map(c => {
-    const claims = (c.claims || []).slice(0, 3).map(cl => `
-      <div>${escapeHtml(cl.text)} <span class="row-meta">[${escapeHtml(cl.stance)}]</span></div>`).join("");
+  if (!trends.length) { box.innerHTML = `<div class="empty">No trends yet — run a cycle.</div>`; return; }
+  box.innerHTML = trends.map(c => {
+    const claims = (c.claims || []).map(cl => {
+      const stance = (cl.stance || "neutral").toLowerCase();
+      const titleLink = cl.url
+        ? `<a class="src" href="${escapeHtml(cl.url)}" target="_blank" rel="noopener"><span class="src-title">${escapeHtml(cl.title || cl.url)}</span></a>`
+        : "";
+      return `
+        <div>
+          <span class="stance ${escapeHtml(stance)}">${escapeHtml(stance)}</span>
+          ${escapeHtml(cl.text)}
+          ${titleLink ? `<div class="row-meta" style="margin-top:2px">${titleLink}</div>` : ""}
+        </div>`;
+    }).join("");
+    const firstSeen = c.first_seen_at ? fmtTime(c.first_seen_at) : null;
+    const lastSeen = c.last_seen_at ? fmtTime(c.last_seen_at) : null;
+    const dateLabel = (firstSeen && lastSeen)
+      ? (firstSeen === lastSeen ? `seen ${firstSeen}` : `${firstSeen} → ${lastSeen}`)
+      : "";
     return `
       <details class="card">
         <summary>
           <span class="momentum">${(c.momentum ?? 0).toFixed(2)}</span>
           ${escapeHtml(c.name)}
+          ${dateLabel ? `<span class="trend-dates">${escapeHtml(dateLabel)}</span>` : ""}
           <span class="row-meta" style="float:right">${c.occurrences ?? 0}× seen</span>
         </summary>
         <div class="evidence">${claims || '<div class="row-meta">no active claims</div>'}</div>
@@ -305,11 +315,11 @@ async function loadTrends() {
   }).join("");
 }
 
-async function loadSuggestions() {
-  const list = parseJson(await runScript("list_suggestions.py --limit 30")) || [];
+function renderSuggestions() {
+  const sugs = SNAPSHOT.suggestions || [];
   const box = document.getElementById("suggestions-list");
-  if (!list.length) { box.innerHTML = `<div class="empty">No drafts yet.</div>`; return; }
-  box.innerHTML = list.map(s => `
+  if (!sugs.length) { box.innerHTML = `<div class="empty">No drafts yet.</div>`; return; }
+  box.innerHTML = sugs.map(s => `
     <article class="suggestion${s.feedback ? " " + s.feedback : ""}" data-id="${s.id}">
       <div class="row-meta">
         <span class="pill kind">${escapeHtml(s.kind)}</span>
@@ -320,43 +330,45 @@ async function loadSuggestions() {
       <p class="body">${escapeHtml(s.body || "")}</p>
       <p class="rationale"><strong>Why:</strong> ${escapeHtml(s.rationale || "")}</p>
       ${s.feedback ? `
-        <div class="row-meta" style="margin-top:8px">
-          Feedback: <strong>${escapeHtml(s.feedback)}</strong> — used to nudge source reliability.
-        </div>` : `
+        <div class="row-meta" style="margin-top:8px">Feedback: <strong>${escapeHtml(s.feedback)}</strong> — applied on the next heal pass.</div>` : `
         <div class="actions">
           <button class="btn primary" data-action="accepted" data-id="${s.id}">Accept (boost sources)</button>
           <button class="btn danger"  data-action="rejected" data-id="${s.id}">Reject (penalise sources)</button>
         </div>`}
     </article>`).join("");
-  // Wire feedback buttons
+
   box.querySelectorAll("button[data-action]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      btn.disabled = true; btn.textContent = "Saving…";
+    btn.addEventListener("click", () => {
       const id = btn.dataset.id, action = btn.dataset.action;
-      const result = parseJson(await runScript(`feedback_suggestion.py --id ${id} --action ${action}`));
-      if (result && result.action) {
-        await loadSuggestions();
-        await loadStatus();
-      } else {
-        btn.disabled = false;
-        btn.textContent = action === "accepted" ? "Accept" : "Reject";
-        alert("Couldn't save feedback — see the audit tab.");
+      const verb = action === "accepted" ? "Accept" : "Reject";
+      // sendPrompt asks the chat Claude to record feedback; next view refresh shows it
+      const msg = `Mark Signal Brain suggestion #${id} as ${action}. Run: cd "$(git rev-parse --show-toplevel)" && python3 scripts/feedback_suggestion.py --id ${id} --action ${action}`;
+      try {
+        if (typeof sendPrompt === "function") {
+          sendPrompt(msg);
+          showToast(`${verb} sent to chat — re-run /view to see it applied.`);
+          btn.disabled = true; btn.textContent = "Sent…";
+        } else {
+          showToast("sendPrompt unavailable — copy the chat command from Suggestions tab.");
+        }
+      } catch (e) {
+        showToast("Couldn't send: " + e.message);
       }
     });
   });
 }
 
-async function loadSources() {
-  const out = parseJson(await runScript("list_sources.py --with-counts --all")) || [];
+function renderSources() {
+  const sources = SNAPSHOT.sources || [];
   const box = document.getElementById("sources-list");
-  if (!out.length) { box.innerHTML = `<div class="empty">No sources configured.</div>`; return; }
+  if (!sources.length) { box.innerHTML = `<div class="empty">No sources configured.</div>`; return; }
   box.innerHTML = `
     <table>
       <thead><tr>
         <th>Kind</th><th>Handle</th><th>Reliability</th><th>Items</th><th>Last fetch</th><th>Status</th>
       </tr></thead>
       <tbody>
-      ${out.map(s => `
+      ${sources.map(s => `
         <tr style="${s.enabled ? '' : 'opacity:0.5'}">
           <td><code class="inline">${escapeHtml(s.kind)}</code></td>
           <td>${escapeHtml(s.handle)}</td>
@@ -369,15 +381,15 @@ async function loadSources() {
     </table>`;
 }
 
-async function loadAudit() {
-  const list = parseJson(await runScript("list_audit.py --limit 200")) || [];
+function renderAudit() {
+  const audit = SNAPSHOT.audit || [];
   const box = document.getElementById("audit-list");
-  if (!list.length) { box.innerHTML = `<div class="empty">No audit events yet.</div>`; return; }
+  if (!audit.length) { box.innerHTML = `<div class="empty">No audit events yet.</div>`; return; }
   box.innerHTML = `
     <table>
       <thead><tr><th>Time</th><th>Action</th><th>Detail</th></tr></thead>
       <tbody>
-      ${list.map(e => `
+      ${audit.map(e => `
         <tr>
           <td class="row-meta" style="white-space:nowrap">${fmtTime(e.created_at)}</td>
           <td><code class="inline">${escapeHtml(e.action)}</code></td>
@@ -389,34 +401,33 @@ async function loadAudit() {
 
 // ----- tab switching ------------------------------------------------------
 
-const tabLoaders = {
-  overview: () => Promise.all([loadStatus(), loadOverviewSuggestions()]),
-  trends: () => loadTrends(),
-  suggestions: () => loadSuggestions(),
-  sources: () => loadSources(),
-  audit: () => loadAudit(),
+const tabRenderers = {
+  overview: renderOverview,
+  trends: renderTrends,
+  suggestions: renderSuggestions,
+  sources: renderSources,
+  audit: renderAudit,
 };
-const loaded = new Set();
+const rendered = new Set();
 
 function showTab(name) {
-  document.querySelectorAll(".nav button").forEach(b =>
-    b.classList.toggle("active", b.dataset.tab === name));
-  document.querySelectorAll(".panel").forEach(p =>
-    p.classList.toggle("active", p.id === "panel-" + name));
-  if (!loaded.has(name)) {
-    loaded.add(name);
-    Promise.resolve(tabLoaders[name]()).catch(err => {
+  document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + name));
+  if (!rendered.has(name)) {
+    rendered.add(name);
+    try { tabRenderers[name](); }
+    catch (e) {
       const panel = document.getElementById("panel-" + name);
-      panel.insertAdjacentHTML("afterbegin",
-        `<div class="error">Couldn't load: ${escapeHtml(err.message || String(err))}</div>`);
-    });
+      panel.insertAdjacentHTML("afterbegin", `<div class="empty">Render error: ${escapeHtml(e.message)}</div>`);
+    }
   }
 }
 
 document.querySelectorAll(".nav button").forEach(b =>
   b.addEventListener("click", () => showTab(b.dataset.tab)));
 
-// initial load
+// initial paint
+renderHeader();
 showTab("overview");
 </script>
 </body>
