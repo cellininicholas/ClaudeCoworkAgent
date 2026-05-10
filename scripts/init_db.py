@@ -37,7 +37,7 @@ def main():
             voice_notes="Punchy, one idea per post, no buzzwords, no emojis, opens with a hook, ends with a question.",
         )
         print("  seeded placeholder user_profile (edit at /profile)")
-    print("Done. Edit data with: python -m signal_brain.web  → http://localhost:8765/profile")
+    print("Done. Edit data with: python -m signal_brain.web  → http://localhost:8787/profile")
 
 
 if __name__ == "__main__":

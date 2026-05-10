@@ -18,7 +18,7 @@ WRITER_MODEL = os.environ.get("SIGNAL_BRAIN_WRITER_MODEL", "claude-sonnet-4-6")
 DB_PATH = Path(os.environ.get("SIGNAL_BRAIN_DB", str(REPO_ROOT / "data" / "signal.db")))
 SCHEMA_PATH = REPO_ROOT / "schema.sql"
 
-PORT = int(os.environ.get("SIGNAL_BRAIN_PORT", "8765"))
+PORT = int(os.environ.get("SIGNAL_BRAIN_PORT", "8787"))
 
 # Self-healing tunables
 MOMENTUM_HALF_LIFE_DAYS = 7      # how fast trend momentum decays

@@ -1,6 +1,6 @@
 """Run the localhost web UI.
 
-    python scripts/serve.py        # http://localhost:8765
+    python scripts/serve.py        # http://localhost:8787
 """
 import sys
 from pathlib import Path

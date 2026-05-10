@@ -62,10 +62,10 @@ $0.10/day.
 
 After a cycle has run:
 
-- `http://localhost:8765/` — top trends should populate.
-- `http://localhost:8765/audit` — you should see `ingest`, `decay`,
+- `http://localhost:8787/` — top trends should populate.
+- `http://localhost:8787/audit` — you should see `ingest`, `decay`,
   `merge_concepts` (if any duplicates were detected), and `suggest` events.
-- `http://localhost:8765/suggestions` — drafts ready to accept/reject.
+- `http://localhost:8787/suggestions` — drafts ready to accept/reject.
 
 Accept/reject feedback loops back into source reliability scores — see
 `signal_brain/healing.py::apply_feedback`.

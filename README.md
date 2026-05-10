@@ -8,26 +8,31 @@ trends it noticed weeks ago. Runs locally.
 Built solo for the [Hourglass AI agent challenge](https://challenge.thehourglass.ai/)
 (knowledge-brain track, May 2026).
 
-## Quick start (recommended path — no API key)
+## Quick start (recommended path — no API key, no terminal)
 
-```bash
-git clone <this repo>
-cd HourglassChallenge
+```
+git clone https://github.com/cellininicholas/ClaudeCoworkAgent.git
 ```
 
-Then open the repo in **Claude Cowork** and type:
+Open the folder in **Claude Cowork** and type:
 
 ```
 /setup
 ```
 
-Cowork will walk you through it: pick how the agent should think (default is
-"let Cowork do it" — no API key needed), set up your profile, register a
-scheduled task. Total time: a couple of minutes.
+That's it. Cowork walks you through three questions, runs the install, sets up
+your profile, registers a scheduled task, and runs the first cycle. **No
+terminal, no API key, no Python venv** — the Cowork session itself is the
+agent's brain.
 
-That's it. The scheduled task runs on the cadence you picked; the Cowork session
-*is* the agent's brain. You can then open the dashboard at
-`http://localhost:8765`.
+Once running, ask Claude any time:
+
+- `/cycle` — run one cycle now
+- `/status` — show a status summary in chat
+- "what trends are emerging?" — Claude reads the DB and answers
+
+There is also an optional web dashboard. Skip it unless you want it; everything
+is accessible through Cowork.
 
 ## What it does
 
@@ -43,16 +48,27 @@ That's it. The scheduled task runs on the cadence you picked; the Cowork session
 6. **Learns** from your accept/reject feedback — boosts reliability of sources
    whose signal led to accepted posts, penalises those that led to rejected ones.
 
-## Manual setup (if you don't want to use `/setup`)
+## Optional: the web dashboard
+
+If you want a visual dashboard alongside Cowork, run this once in your terminal:
+
+```bash
+./setup.sh                        # creates .venv, installs deps, inits DB
+.venv/bin/python scripts/serve.py # http://localhost:8787
+```
+
+The dashboard is a passive viewer — it doesn't drive the agent. Everything in
+the dashboard (trends, suggestions, sources, audit log) is also reachable in
+Cowork via `/status` or by asking Claude.
+
+## Manual setup (if you don't want `/setup`)
 
 ```bash
 ./setup.sh                        # creates .venv, installs deps, inits DB
 cp .env.example .env              # default provider is `cowork` — no key needed
-python scripts/test_sources.py    # confirm your network reaches each source
-python scripts/serve.py           # http://localhost:8765
+.venv/bin/python scripts/test_sources.py
 ```
 
-Then visit `http://localhost:8765/profile` and fill in your bio + voice notes.
 To run a cycle by hand inside Cowork, type `/cycle`. To run autonomously, wire
 `/cycle` into a Cowork scheduled task — see [docs/cowork-setup.md](docs/cowork-setup.md).
 
@@ -107,7 +123,7 @@ The "knowledge brain" track of the challenge calls for an agent that
 | Feedback-driven reliability     | `healing.apply_feedback`             | Accepting a suggestion boosts the sources it cited; rejecting it penalises them. |
 
 Every action is written to `audit_log` so the user can read exactly what the
-agent did and why — visible at `http://localhost:8765/audit`.
+agent did and why — visible at `http://localhost:8787/audit`.
 
 ## Project layout
 
@@ -158,7 +174,7 @@ docs/
 | ~~X/Twitter~~| paid + auth | $$   | Dropped: friction-to-value ratio is bad  |
 | ~~LinkedIn~~ | gated       | n/a  | Dropped: no public posts API; scraping is ToS-risky |
 
-You can add or remove sources at `http://localhost:8765/sources`.
+You can add or remove sources at `http://localhost:8787/sources`.
 
 ## What it doesn't do (yet)
 
