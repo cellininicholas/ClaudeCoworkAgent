@@ -8,6 +8,9 @@ trends it noticed weeks ago. Runs locally.
 Built solo for the [Hourglass AI agent challenge](https://challenge.thehourglass.ai/)
 (knowledge-brain track, May 2026).
 
+## Loom video
+https://www.loom.com/share/857dfe9c2da340d7abf4cc1efb30f4e2
+
 ## Quick start (recommended path — no API key, no terminal)
 
 ```
