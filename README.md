@@ -10,7 +10,7 @@ Built solo for the [Hourglass AI agent challenge](https://challenge.thehourglass
 
 ## Demo (2 min)
 
-[![Watch the Signal Brain demo](https://cdn.loom.com/sessions/thumbnails/857dfe9c2da340d7abf4cc1efb30f4e2-with-play.gif)](https://www.loom.com/share/857dfe9c2da340d7abf4cc1efb30f4e2)
+[![Watch the Signal Brain demo](docs/demo-thumb.png)](https://www.loom.com/share/857dfe9c2da340d7abf4cc1efb30f4e2)
 
 ## Quick start (recommended path — no API key, no terminal)
 
