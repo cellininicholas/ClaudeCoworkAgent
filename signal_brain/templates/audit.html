@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Audit · Signal Brain{% endblock %}
 {% block content %}
-<div class="flex items-center justify-between mb-4">
+<div class="mb-4">
   <h1 class="text-xl font-semibold">Audit log</h1>
-  <form method="post" action="/run/heal"><button class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded text-sm">Run audit pass</button></form>
+  <p class="text-xs text-stone-500 mt-1">Self-healing runs automatically every cycle. To force one, type <code>/cycle</code> in Cowork.</p>
 </div>
 <p class="text-sm text-stone-600 mb-4">Every self-healing action is recorded here. You can see exactly what the agent decided and why.</p>
 <div class="bg-white border border-stone-200 rounded-lg overflow-hidden">

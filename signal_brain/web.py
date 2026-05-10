@@ -12,7 +12,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from . import db, config, ingest as ingest_mod, healing, suggester
+from . import db, config
 
 
 HERE = Path(__file__).resolve().parent
@@ -26,11 +26,13 @@ app.mount("/static", StaticFiles(directory=str(HERE / "static")), name="static")
 
 def _stats() -> dict:
     with db.cursor() as cur:
-        cur.execute("SELECT COUNT(*) FROM raw_items"); items = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM claims WHERE valid_to IS NULL"); claims = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM concepts WHERE archived = 0"); concepts = cur.fetchone()[0]
-        cur.execute("SELECT COUNT(*) FROM suggestions WHERE feedback IS NULL"); pending = cur.fetchone()[0]
-    return {"items": items, "claims": claims, "concepts": concepts, "pending_suggestions": pending}
+        cur.execute("SELECT COUNT(*) FROM raw_items"); n_items = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM claims WHERE valid_to IS NULL"); n_claims = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM concepts WHERE archived = 0"); n_concepts = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM suggestions WHERE feedback IS NULL"); n_pending = cur.fetchone()[0]
+    # Don't use a key called "items" here — Jinja2 resolves dict.items() as the method
+    # before the dict-key lookup, and you'd see "<built-in method items of dict object>".
+    return {"n_items": n_items, "n_claims": n_claims, "n_concepts": n_concepts, "n_pending": n_pending}
 
 
 # ---------- routes ----------
@@ -111,7 +113,7 @@ def sources_page(request: Request):
     with db.cursor() as cur:
         cur.execute("""
             SELECT s.*,
-                   (SELECT COUNT(*) FROM raw_items WHERE source_id = s.id) AS items,
+                   (SELECT COUNT(*) FROM raw_items WHERE source_id = s.id) AS n_items,
                    (SELECT MAX(fetched_at) FROM raw_items WHERE source_id = s.id) AS last_item
             FROM sources s ORDER BY s.kind, s.handle
         """)
@@ -162,21 +164,7 @@ def profile_save(name: str = Form(...), role: str = Form(...), company: str = Fo
     return RedirectResponse("/profile", status_code=303)
 
 
-# ---------- one-click run buttons ----------
-
-@app.post("/run/ingest")
-def run_ingest():
-    ingest_mod.ingest_all()
-    return RedirectResponse("/", status_code=303)
-
-
-@app.post("/run/heal")
-def run_heal():
-    healing.run_audit()
-    return RedirectResponse("/audit", status_code=303)
-
-
-@app.post("/run/suggest")
-def run_suggest():
-    suggester.generate_suggestions()
-    return RedirectResponse("/suggestions", status_code=303)
+# Cycle-trigger endpoints intentionally removed. The agent self-heals on its
+# scheduled cadence — exposing manual buttons would defeat the point. The only
+# write-back the UI permits is suggestion feedback (accept/reject), because that
+# IS the human-in-the-loop signal the self-healing layer learns from.
