@@ -24,9 +24,14 @@ python scripts/init_db.py
 echo
 echo "Setup complete."
 echo
+echo "Default provider is 'cowork' — no API key needed. The Cowork session itself"
+echo "is the LLM. To use Anthropic or OpenAI directly instead, edit .env."
+echo
 echo "Next steps:"
-echo "  1. Add your ANTHROPIC_API_KEY to .env"
-echo "  2. Run the UI:                 python scripts/serve.py"
-echo "  3. Edit your profile at:       http://localhost:8765/profile"
-echo "  4. Run one full cycle:         python scripts/run_all.py"
-echo "  5. Wire it up in Cowork:       see docs/cowork-setup.md"
+echo "  1. Start the dashboard:        .venv/bin/python scripts/serve.py"
+echo "       → http://localhost:8787"
+echo "  2. Edit your profile at:       http://localhost:8787/profile"
+echo "  3. Run one cycle:"
+echo "       Cowork mode:  type  /cycle  in a Claude Cowork session in this folder"
+echo "       API mode:     .venv/bin/python scripts/run_all.py"
+echo "  4. Wire up the scheduled task: see docs/cowork-setup.md (or type /setup)"

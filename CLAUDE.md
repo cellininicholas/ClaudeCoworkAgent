@@ -10,10 +10,12 @@ Submission for the Hourglass AI agent challenge (knowledge-brain track), May 202
 
 ## Two ways the agent runs
 
-1. **Cowork-managed mode (default).** No API key required. The agent's "brain" *is* the Claude Cowork scheduled-task session. You (Claude) drive the cycle by calling atomic bash scripts. See "Running a cycle in Cowork mode" below. This is the default and the path users are walked through by `/setup`.
-2. **Direct-API mode.** Set `SIGNAL_BRAIN_PROVIDER=anthropic` (or `openai`) and an API key. Then `python scripts/run_all.py` does the full cycle without any Cowork session.
+1. **Cowork-managed mode (default).** No API key required, **no host setup required.** The host machine never executes Python — the Cowork sandbox does, against the SQLite DB in the mounted project folder. The agent's "brain" *is* the Claude Cowork scheduled-task session. You (Claude) drive the cycle by calling atomic bash scripts. See "Running a cycle in Cowork mode" below.
+2. **Direct-API mode.** Set `SIGNAL_BRAIN_PROVIDER=anthropic` (or `openai`) and an API key. Requires a host venv (`./setup.sh`). Then `python scripts/run_all.py` does the full cycle without any Cowork session. Optional.
 
 The selection lives in `.env` and is read by `signal_brain/llm.py`.
+
+The web dashboard (`scripts/serve.py`) is **optional** in either mode — it's a viewer, not load-bearing. `/status` gives the same information in chat.
 
 ## Running a cycle in Cowork mode
 
@@ -69,8 +71,9 @@ If any step fails, write a short note to `audit_log` via the existing scripts an
 
 ## Slash commands
 
-- `/setup` — interactive first-run setup. Walks the user through provider choice, profile creation, source config, and Cowork scheduled-task wiring.
+- `/setup` — interactive first-run setup. Walks the user through provider choice, profile creation, source config, and Cowork scheduled-task wiring. **Runs entirely in Cowork — no terminal needed for Cowork mode.**
 - `/cycle` — runs one full agent cycle (the steps above). Use this for ad-hoc runs and as the body of the Cowork scheduled task.
+- `/status` — print a Cowork-native status summary in chat. Equivalent to the dashboard, no web server required.
 
 ## File map (curated)
 
