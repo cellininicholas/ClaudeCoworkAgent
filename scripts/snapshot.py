@@ -24,7 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from signal_brain import db
+from signal_brain import db, config as sb_config
 
 
 def main():
@@ -84,6 +84,17 @@ def main():
 
         # profile
         out["profile"] = db.get_user_profile()
+
+    # healing config (read-only; surfaced for transparency)
+    out["config"] = {
+        "momentum_half_life_days": sb_config.MOMENTUM_HALF_LIFE_DAYS,
+        "stale_concept_days": sb_config.STALE_CONCEPT_DAYS,
+        "max_audit_concepts": sb_config.MAX_AUDIT_CONCEPTS,
+        "ingest_limit_per_source": sb_config.INGEST_LIMIT_PER_SOURCE,
+        "model": sb_config.MODEL,
+        "writer_model": sb_config.WRITER_MODEL,
+        "db_path": str(sb_config.DB_PATH),
+    }
 
     json.dump(out, sys.stdout, default=str)
     sys.stdout.write("\n")

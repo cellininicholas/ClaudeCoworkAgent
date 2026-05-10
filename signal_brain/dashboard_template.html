@@ -103,6 +103,29 @@
              background: #1c1917; color: #fff; padding: 10px 16px; border-radius: 6px;
              font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 999; }
     .refresh-note { font-size: 12px; color: #78716c; margin-left: 8px; }
+    /* profile + config */
+    .profile-card { background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
+                    padding: 14px 16px; margin-bottom: 16px; }
+    .profile-card h2 { margin: 0 0 8px; }
+    .profile-row { display: flex; gap: 8px; padding: 6px 0; align-items: flex-start; }
+    .profile-row .label { width: 110px; flex-shrink: 0; font-size: 12px;
+                          color: #78716c; padding-top: 2px; }
+    .profile-row .value { flex: 1; font-size: 13px; color: #1c1917; word-break: break-word; }
+    .profile-row .value.empty { color: #a8a29e; font-style: italic; }
+    .profile-row .edit { font-size: 11px; color: #047857; cursor: pointer;
+                         background: none; border: none; padding: 0; }
+    .profile-row .edit:hover { text-decoration: underline; }
+    .profile-row textarea, .profile-row input.edit-input {
+      flex: 1; font: inherit; font-size: 13px; padding: 6px 8px;
+      border: 1px solid #a7f3d0; border-radius: 4px; resize: vertical;
+    }
+    .profile-row .save-btn { font-size: 11px; padding: 4px 8px; }
+    .config-card { background: #fafafa; border: 1px dashed #d6d3d1;
+                   border-radius: 8px; padding: 12px 16px; margin-top: 24px; }
+    .config-card h2 { margin: 0 0 8px; }
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;
+                   font-size: 12px; color: #57534e; }
+    .config-grid div code { color: #047857; font-family: ui-monospace, monospace; }
   </style>
 </head>
 <body>
@@ -128,6 +151,7 @@
       To refresh this snapshot, ask Claude to <strong>run the view project skill</strong>.
     </p>
     <div id="staleness"></div>
+    <section class="profile-card" id="profile-card"></section>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
       <div>
         <h2>Top trends</h2>
@@ -138,6 +162,7 @@
         <div id="overview-suggestions"></div>
       </div>
     </div>
+    <section class="config-card" id="config-card"></section>
   </section>
 
   <section id="panel-trends" class="panel">
@@ -217,6 +242,110 @@ function renderHeader() {
     <span><strong>${s.pending_suggestions ?? 0}</strong> drafts pending</span>`;
   const meta = document.getElementById("header-meta");
   meta.innerHTML = `snapshot ${fmtTime(SNAPSHOT.generated_at)}<span class="refresh-note">— ask Claude to run the view skill to refresh</span>`;
+}
+
+// ----- profile (visible + editable via sendPrompt) -----------------------
+
+const PROFILE_FIELDS = [
+  { key: "name",         label: "Name",      multiline: false },
+  { key: "role",         label: "Role",      multiline: false },
+  { key: "company",      label: "Company",   multiline: false },
+  { key: "bio",          label: "Bio",       multiline: true  },
+  { key: "interests",    label: "Interests", multiline: false, hint: "comma-separated topics" },
+  { key: "voice_notes",  label: "Voice",     multiline: true,  hint: "tone, dos, don'ts" },
+];
+
+function renderProfile() {
+  const p = SNAPSHOT.profile || {};
+  const card = document.getElementById("profile-card");
+  if (!card) return;
+  if (!SNAPSHOT.profile) {
+    card.innerHTML = `<h2>Your profile</h2><p class="empty">No profile set yet — ask Claude to run the setup project skill.</p>`;
+    return;
+  }
+  card.innerHTML = `<h2>Your profile <span class="refresh-note">— click any field to edit</span></h2>` +
+    PROFILE_FIELDS.map(f => {
+      const v = p[f.key];
+      const display = v ? escapeHtml(v) : `<span class="empty">— not set${f.hint ? ` (${f.hint})` : ""} —</span>`;
+      return `
+        <div class="profile-row" data-field="${f.key}">
+          <div class="label">${escapeHtml(f.label)}</div>
+          <div class="value${v ? "" : " empty"}">${display}</div>
+          <button class="edit">Edit</button>
+        </div>`;
+    }).join("");
+
+  card.querySelectorAll(".profile-row").forEach(row => {
+    row.querySelector(".edit").addEventListener("click", () => beginEditField(row));
+  });
+}
+
+function beginEditField(row) {
+  const field = row.dataset.field;
+  const fmeta = PROFILE_FIELDS.find(f => f.key === field);
+  const current = (SNAPSHOT.profile || {})[field] || "";
+  const valueEl = row.querySelector(".value");
+  const editBtn = row.querySelector(".edit");
+  const inputHTML = fmeta.multiline
+    ? `<textarea rows="3" class="edit-input">${escapeHtml(current)}</textarea>`
+    : `<input class="edit-input" value="${escapeHtml(current)}">`;
+  valueEl.innerHTML = inputHTML;
+  editBtn.style.display = "none";
+  const input = valueEl.querySelector(".edit-input");
+  input.focus();
+  // wire save / cancel
+  const save = document.createElement("button");
+  save.className = "btn primary save-btn"; save.textContent = "Save";
+  const cancel = document.createElement("button");
+  cancel.className = "btn save-btn"; cancel.textContent = "Cancel";
+  row.appendChild(save); row.appendChild(cancel);
+  cancel.onclick = () => renderProfile();
+  save.onclick = () => {
+    const newValue = input.value.trim();
+    if (newValue === current) { renderProfile(); return; }
+    sendProfileUpdate(field, newValue);
+    save.disabled = cancel.disabled = true;
+    save.textContent = "Sent…";
+  };
+  input.addEventListener("keydown", e => {
+    if (e.key === "Escape") cancel.click();
+    if (e.key === "Enter" && !fmeta.multiline) save.click();
+  });
+}
+
+function sendProfileUpdate(field, value) {
+  const escaped = value.replace(/"/g, '\\"').replace(/\n/g, "\\n");
+  const msg = `Update my Signal Brain profile.${field} to: ${value}\n\n` +
+    `Run: cd "$(git rev-parse --show-toplevel)" && python3 scripts/set_profile_field.py --field ${field} --value "${escaped}"\n\n` +
+    `Then ask me to run the view project skill so the dashboard reflects the change.`;
+  try {
+    if (typeof sendPrompt === "function") {
+      sendPrompt(msg);
+      showToast(`${field} update sent — re-run /view to see it applied.`);
+    } else {
+      showToast("sendPrompt unavailable — copy the command from the Audit tab.");
+    }
+  } catch (e) {
+    showToast("Couldn't send: " + e.message);
+  }
+}
+
+function renderConfig() {
+  const c = SNAPSHOT.config || {};
+  const card = document.getElementById("config-card");
+  if (!card) return;
+  card.innerHTML = `
+    <h2>How it heals — current config</h2>
+    <p class="kicker" style="margin-bottom:8px">These are the knobs the self-healing layers use. Defined in <code class="inline">signal_brain/config.py</code>.</p>
+    <div class="config-grid">
+      <div>Momentum half-life: <code>${c.momentum_half_life_days ?? "?"} days</code></div>
+      <div>Archive concepts unseen for: <code>${c.stale_concept_days ?? "?"} days</code></div>
+      <div>Audit pass examines top: <code>${c.max_audit_concepts ?? "?"} concepts</code></div>
+      <div>Ingest cap per source: <code>${c.ingest_limit_per_source ?? "?"} items</code></div>
+      <div>Extraction model: <code>${escapeHtml(c.model || "?")}</code></div>
+      <div>Writer model: <code>${escapeHtml(c.writer_model || "?")}</code></div>
+      <div style="grid-column:1/-1">DB: <code>${escapeHtml(c.db_path || "?")}</code></div>
+    </div>`;
 }
 
 function renderOverview() {
@@ -401,8 +530,14 @@ function renderAudit() {
 
 // ----- tab switching ------------------------------------------------------
 
+function renderOverviewBundle() {
+  renderProfile();
+  renderOverview();
+  renderConfig();
+}
+
 const tabRenderers = {
-  overview: renderOverview,
+  overview: renderOverviewBundle,
   trends: renderTrends,
   suggestions: renderSuggestions,
   sources: renderSources,
