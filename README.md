@@ -14,11 +14,13 @@ Built solo for the [Hourglass AI agent challenge](https://challenge.thehourglass
 git clone https://github.com/cellininicholas/ClaudeCoworkAgent.git
 ```
 
-Open the folder in **Claude Cowork** and type:
+Open the folder in **Claude Cowork** and tell Claude:
 
-```
-/setup
-```
+> Run the **setup** project skill.
+
+(Or type `/setup` — both work. Slash-command autocomplete for project-scoped
+commands isn't reliable in every Cowork build, so the plain-English version is
+the safer default.)
 
 That's it. Cowork walks you through three questions, runs the install, sets up
 your profile, registers a scheduled task, and runs the first cycle. **No
@@ -27,16 +29,19 @@ agent's brain.
 
 Once running, ask Claude any time:
 
-- `/cycle` — run one cycle now
-- `/view` — open the live dashboard (a persistent Cowork artifact)
-- `/status` — show a status summary in chat
-- "what trends are emerging?" — Claude reads the DB and answers
+| Ask Claude | What it does |
+|------------|--------------|
+| "Run the **cycle** project skill" (or `/cycle`) | One full cycle now: fetch → extract → heal → draft |
+| "Run the **view** project skill" (or `/view`) | Create or refresh the live dashboard (a Cowork artifact) |
+| "Run the **status** project skill" (or `/status`) | Print a status summary in chat |
+| "What trends are emerging?" | Claude reads the DB and summarises in plain English |
 
-The **`/view` artifact** is the main surface: a Cowork-native page that shows
-trends, drafted posts (with accept/reject), sources, and the audit log of every
-self-healing action. It pulls fresh data from your local SQLite every time you
-open it. There's also an older FastAPI dashboard (`scripts/serve.py`) — kept
-around as a fallback but no longer needed.
+The **dashboard artifact** (created by the **view** skill) is the main surface:
+a Cowork-native page that shows trends, drafted posts (with accept/reject),
+sources, and the audit log of every self-healing action. It pulls fresh data
+from your local SQLite every time you open it. There's also an older FastAPI
+dashboard (`scripts/serve.py`) — kept around as a fallback but no longer
+needed.
 
 ## What it does
 
@@ -73,8 +78,9 @@ cp .env.example .env              # default provider is `cowork` — no key need
 .venv/bin/python scripts/test_sources.py
 ```
 
-To run a cycle by hand inside Cowork, type `/cycle`. To run autonomously, wire
-`/cycle` into a Cowork scheduled task — see [docs/cowork-setup.md](docs/cowork-setup.md).
+To run a cycle by hand inside Cowork, ask Claude "run the cycle project skill"
+(or type `/cycle`). To run autonomously, wire that same skill into a Cowork
+scheduled task — see [docs/cowork-setup.md](docs/cowork-setup.md).
 
 ## Two ways to run
 

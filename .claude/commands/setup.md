@@ -85,7 +85,7 @@ If they picked Anthropic/OpenAI mode, skip scheduling for now and tell them: "On
 
 ## Step 6 — Run one cycle right now (proof it works)
 
-In Cowork mode, run the cycle yourself: invoke `/cycle` (you can do this directly — it's another slash command in this repo). The user will see the agent work end-to-end before the scheduled task even fires.
+In Cowork mode, run the cycle yourself: read `.claude/commands/cycle.md` and execute its steps inline (you don't need to invoke /cycle as a slash command — just follow the instructions). The user will see the agent work end-to-end before the scheduled task even fires.
 
 If you can't invoke another slash command directly, just run the cycle steps inline using bash (the steps are documented in `.claude/commands/cycle.md`).
 
@@ -105,7 +105,7 @@ If `mcp__cowork__create_artifact` isn't available in this Cowork version, skip a
 
 Tell the user, in one short paragraph:
 
-> Done. Your agent is set up and the first cycle just ran — you should see trends and post drafts above. The scheduled task will refresh every <interval> from now on. To check progress any time, just ask me ("how's my agent doing?") and I'll run a status report. To open the dashboard, type `/view` — it creates a live Cowork artifact you can re-open any time.
+> Done. Your agent is set up and the first cycle just ran — you should see trends and post drafts above. The scheduled task will refresh every <interval> from now on. To check progress any time, just ask me ("how's my agent doing?") and I'll run a status report. To open the dashboard, ask me to **run the view project skill** — it creates a live Cowork artifact you can re-open any time.
 
 ## What NOT to do
 
