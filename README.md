@@ -28,11 +28,15 @@ agent's brain.
 Once running, ask Claude any time:
 
 - `/cycle` — run one cycle now
+- `/view` — open the live dashboard (a persistent Cowork artifact)
 - `/status` — show a status summary in chat
 - "what trends are emerging?" — Claude reads the DB and answers
 
-There is also an optional web dashboard. Skip it unless you want it; everything
-is accessible through Cowork.
+The **`/view` artifact** is the main surface: a Cowork-native page that shows
+trends, drafted posts (with accept/reject), sources, and the audit log of every
+self-healing action. It pulls fresh data from your local SQLite every time you
+open it. There's also an older FastAPI dashboard (`scripts/serve.py`) — kept
+around as a fallback but no longer needed.
 
 ## What it does
 
@@ -48,18 +52,18 @@ is accessible through Cowork.
 6. **Learns** from your accept/reject feedback — boosts reliability of sources
    whose signal led to accepted posts, penalises those that led to rejected ones.
 
-## Optional: the web dashboard
+## Optional: legacy FastAPI dashboard
 
-If you want a visual dashboard alongside Cowork, run this once in your terminal:
+If you want a fully-local fallback (no Cowork, just a localhost web server),
+run this in your terminal:
 
 ```bash
 ./setup.sh                        # creates .venv, installs deps, inits DB
 .venv/bin/python scripts/serve.py # http://localhost:8787
 ```
 
-The dashboard is a passive viewer — it doesn't drive the agent. Everything in
-the dashboard (trends, suggestions, sources, audit log) is also reachable in
-Cowork via `/status` or by asking Claude.
+This duplicates what the `/view` artifact does. You don't need both — the
+artifact is the primary surface in Cowork mode.
 
 ## Manual setup (if you don't want `/setup`)
 

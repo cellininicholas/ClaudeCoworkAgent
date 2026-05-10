@@ -15,15 +15,18 @@ Submission for the Hourglass AI agent challenge (knowledge-brain track), May 202
 
 The selection lives in `.env` and is read by `signal_brain/llm.py`.
 
-The web dashboard (`scripts/serve.py`) is **optional** in either mode — it's a viewer, not load-bearing. `/status` gives the same information in chat.
+The dashboard is a Cowork **live artifact** (`/view` creates it; HTML lives at `signal_brain/dashboard_template.html`). The artifact calls `mcp__workspace__bash` to run the read-only `list_*.py` scripts on each open, so it always reflects current state. `/status` is a chat-only fallback. The legacy FastAPI dashboard (`scripts/serve.py`) still works but is no longer the primary surface.
 
 ## Running a cycle in Cowork mode
 
-When invoked as a scheduled task (or by the user via `/cycle`), do these steps in order. Read each step's stdout before moving on.
+When invoked as a scheduled task (or by the user via `/cycle`), do these steps in order. Read each step's stdout before moving on. **The full prompt lives in `.claude/commands/cycle.md` — keep that and this section in sync.**
 
-1. **Fetch new items.**
-   `cd "$REPO" && .venv/bin/python scripts/fetch.py`
-   Inserts raw_items, no LLM. Idempotent — exact-hash dedup means re-runs are safe.
+1. **Fetch new items via the WebFetch tool** (NOT `scripts/fetch.py`).
+   Why: the Cowork sandbox's outbound proxy 403s most public APIs. WebFetch has a wider allowlist and is the right network layer for Cowork mode.
+   - Run `python3 scripts/list_sources.py` to get `[{id, kind, handle, fetch_url, format}, ...]`.
+   - For each, call `WebFetch(url=fetch_url, prompt="extract recent items as JSON: external_id, title, url, body, posted_at, score")`.
+   - For each item, call `python3 scripts/save_raw_item.py --source-id N --json '{...}'`. Hash-dedup is built in.
+   The legacy `scripts/fetch.py` still exists for direct-API mode (where the host venv has unrestricted network).
 
 2. **List pending items needing extraction.**
    `.venv/bin/python scripts/list_pending.py --limit 20`
@@ -71,9 +74,10 @@ If any step fails, write a short note to `audit_log` via the existing scripts an
 
 ## Slash commands
 
-- `/setup` — interactive first-run setup. Walks the user through provider choice, profile creation, source config, and Cowork scheduled-task wiring. **Runs entirely in Cowork — no terminal needed for Cowork mode.**
+- `/setup` — interactive first-run setup. Walks the user through provider choice, profile creation, source config, scheduled-task wiring, and dashboard artifact. **Runs entirely in Cowork — no terminal needed for Cowork mode.**
 - `/cycle` — runs one full agent cycle (the steps above). Use this for ad-hoc runs and as the body of the Cowork scheduled task.
-- `/status` — print a Cowork-native status summary in chat. Equivalent to the dashboard, no web server required.
+- `/status` — print a status summary directly in chat. No artifact, no web server — just text.
+- `/view` — create or refresh the **signal-brain** Cowork live artifact (the dashboard). The artifact persists across sessions and pulls fresh data from `scripts/*.py` every time it's opened. This is the primary way users see their agent's state.
 
 ## File map (curated)
 
@@ -85,7 +89,13 @@ If any step fails, write a short note to `audit_log` via the existing scripts an
 | `signal_brain/healing.py` | All self-healing layers + `MERGE_PROMPT`/`CONTRA_PROMPT`. |
 | `signal_brain/suggester.py` | `SUGGESTION_PROMPT` + `gather_context()` + `save_post()`. |
 | `signal_brain/web.py` | FastAPI localhost UI. |
-| `scripts/fetch.py` | (no LLM) pull from sources, store raw_items. |
+| `scripts/list_sources.py` | (no LLM) enabled sources + their fetch_url; `--with-counts` for the dashboard. |
+| `scripts/save_raw_item.py` | persist one fetched item (Cowork mode). |
+| `scripts/fetch.py` | (no LLM) pull from sources via httpx, store raw_items. Used by direct-API mode. |
+| `scripts/list_suggestions.py` | recent drafts as JSON; used by the dashboard artifact. |
+| `scripts/list_audit.py` | recent audit log as JSON; used by the dashboard artifact. |
+| `scripts/feedback_suggestion.py` | apply accept/reject to a suggestion (called from the dashboard). |
+| `signal_brain/dashboard_template.html` | the dashboard artifact's HTML. `__SB_REPO_PATH__` placeholder is substituted by `/view`. |
 | `scripts/list_pending.py` | items needing extraction (JSON). |
 | `scripts/save_extraction.py` | persist one extraction result. |
 | `scripts/heal_basic.py` | (no LLM) decay + archive + feedback. |

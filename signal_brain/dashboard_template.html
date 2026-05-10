@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Signal Brain</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #fafaf9;
+      color: #292524;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 16px; }
+    header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 16px; background: #fff;
+      border-bottom: 1px solid #e7e5e4;
+    }
+    header h1 {
+      margin: 0; font-size: 16px; font-weight: 600;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      color: #047857;
+    }
+    .stats { margin-left: auto; display: flex; gap: 12px; font-size: 12px; color: #78716c; }
+    .stats span strong { color: #292524; font-weight: 600; }
+    .nav { display: flex; gap: 4px; padding: 0 16px; background: #fff; border-bottom: 1px solid #e7e5e4; }
+    .nav button {
+      background: none; border: none; padding: 10px 14px;
+      font: inherit; cursor: pointer; color: #57534e;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+    }
+    .nav button:hover { color: #292524; }
+    .nav button.active { color: #047857; border-bottom-color: #047857; }
+    .panel { display: none; padding: 20px 0; }
+    .panel.active { display: block; }
+    h2 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+         color: #78716c; margin: 0 0 10px; }
+    .card {
+      background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
+      padding: 14px; margin-bottom: 12px;
+    }
+    .card-row { display: flex; align-items: center; gap: 12px; padding: 8px 0;
+                border-bottom: 1px solid #f5f5f4; }
+    .card-row:last-child { border-bottom: none; }
+    .momentum {
+      font-family: ui-monospace, monospace; font-size: 11px;
+      color: #047857; background: #ecfdf5; padding: 2px 6px;
+      border-radius: 4px; min-width: 44px; text-align: center;
+    }
+    .pill { display: inline-block; font-size: 11px; padding: 2px 8px;
+            background: #f5f5f4; color: #57534e; border-radius: 999px; }
+    .pill.callback { background: #fef3c7; color: #92400e; }
+    .pill.kind { background: #ecfdf5; color: #047857; }
+    .row-meta { font-size: 11px; color: #a8a29e; }
+    .suggestion {
+      background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
+      padding: 16px; margin-bottom: 12px;
+    }
+    .suggestion.accepted { box-shadow: 0 0 0 1px #34d399; }
+    .suggestion.rejected { opacity: 0.55; }
+    .suggestion h3 { margin: 0 0 8px; font-size: 15px; }
+    .suggestion p.body { margin: 8px 0; white-space: pre-wrap; color: #1c1917; }
+    .suggestion p.rationale { margin: 8px 0 0; font-size: 12px; color: #78716c; }
+    .suggestion .actions { display: flex; gap: 8px; margin-top: 12px; }
+    button.btn {
+      padding: 6px 12px; border-radius: 6px; border: 1px solid #d6d3d1;
+      background: #fff; cursor: pointer; font: inherit; font-size: 13px;
+    }
+    button.btn:hover { background: #f5f5f4; }
+    button.btn.primary { background: #047857; color: #fff; border-color: #047857; }
+    button.btn.primary:hover { background: #065f46; }
+    button.btn.danger { background: #dc2626; color: #fff; border-color: #dc2626; }
+    button.btn.danger:hover { background: #b91c1c; }
+    button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; background: #fff;
+            border: 1px solid #e7e5e4; border-radius: 8px; overflow: hidden; }
+    table th { text-align: left; padding: 10px 12px; background: #f5f5f4;
+               font-size: 11px; text-transform: uppercase; color: #57534e; font-weight: 600; }
+    table td { padding: 10px 12px; border-top: 1px solid #f5f5f4; vertical-align: top; }
+    a { color: #047857; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .empty { padding: 24px; text-align: center; color: #a8a29e; font-size: 13px; }
+    .loading { padding: 24px; text-align: center; color: #a8a29e; font-size: 13px; }
+    .error { padding: 12px; background: #fef2f2; color: #991b1b;
+             border: 1px solid #fecaca; border-radius: 6px; font-size: 13px; }
+    .kicker { font-size: 13px; color: #57534e; margin-bottom: 16px; }
+    details summary { cursor: pointer; font-weight: 500; padding: 4px 0; }
+    code.inline { background: #f5f5f4; padding: 1px 5px; border-radius: 3px;
+                  font-family: ui-monospace, monospace; font-size: 12px; }
+    .evidence { margin-top: 8px; padding-left: 14px;
+                border-left: 2px solid #e7e5e4; font-size: 12px; }
+    .evidence > div { margin: 4px 0; }
+    .evidence a { display: block; color: #78716c; }
+    .stale { background: #fffbeb; border-color: #fde68a; padding: 10px 14px;
+             border-radius: 6px; font-size: 13px; color: #92400e; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>signal_brain</h1>
+  <span id="header-meta" class="row-meta"></span>
+  <span class="stats" id="header-stats"></span>
+</header>
+
+<nav class="nav">
+  <button data-tab="overview" class="active">Overview</button>
+  <button data-tab="trends">Trends</button>
+  <button data-tab="suggestions">Suggestions</button>
+  <button data-tab="sources">Sources</button>
+  <button data-tab="audit">Audit</button>
+</nav>
+
+<main class="container">
+  <section id="panel-overview" class="panel active">
+    <p class="kicker">
+      Signal Brain reads what's happening online, builds a memory of trends, and drafts
+      social posts in your voice every cycle. This page reflects whatever the agent has
+      learned so far. Type <code class="inline">/cycle</code> in chat to run on demand,
+      or wait for the scheduled task.
+    </p>
+    <div id="staleness"></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div>
+        <h2>Top trends</h2>
+        <div id="overview-trends" class="card"><div class="loading">Loading…</div></div>
+      </div>
+      <div>
+        <h2>Latest drafts</h2>
+        <div id="overview-suggestions"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-trends" class="panel">
+    <h2>Trends — what the agent thinks is moving</h2>
+    <p class="kicker">
+      Momentum is a decaying score: recent claims weigh more, old ones fade
+      (7-day half-life). When two sources contradict, the more reliable one wins
+      and the loser is marked superseded — see Audit.
+    </p>
+    <div id="trends-list"><div class="loading">Loading…</div></div>
+  </section>
+
+  <section id="panel-suggestions" class="panel">
+    <h2>Drafts</h2>
+    <p class="kicker">
+      Three drafts per cycle: a ride-the-trend, a contrarian angle, and a
+      callback (an older trend re-emerging). Accept/reject feeds the
+      self-healing layer — accepting nudges the contributing sources up, rejecting nudges them down.
+    </p>
+    <div id="suggestions-list"><div class="loading">Loading…</div></div>
+  </section>
+
+  <section id="panel-sources" class="panel">
+    <h2>Sources</h2>
+    <p class="kicker">
+      Reliability evolves with your accept/reject feedback. Items shows how
+      many raw items the agent has pulled from each source.
+    </p>
+    <div id="sources-list"><div class="loading">Loading…</div></div>
+  </section>
+
+  <section id="panel-audit" class="panel">
+    <h2>Audit log — every self-healing action the agent has taken</h2>
+    <p class="kicker">
+      No black box. Each row records what the agent decided, when, and why.
+    </p>
+    <div id="audit-list"><div class="loading">Loading…</div></div>
+  </section>
+</main>
+
+<script>
+const REPO_PATH = "__SB_REPO_PATH__";
+
+// ----- bash helper --------------------------------------------------------
+
+async function runScript(scriptArgs) {
+  const command = `cd '${REPO_PATH}' && python3 scripts/${scriptArgs}`;
+  const result = await window.cowork.callMcpTool("mcp__workspace__bash", { command });
+  return extractStdout(result);
+}
+
+// MCP tool returns vary in shape — handle the common forms.
+function extractStdout(r) {
+  if (r == null) return "";
+  if (typeof r === "string") return r;
+  if (typeof r.output === "string") return r.output;
+  if (typeof r.stdout === "string") return r.stdout;
+  if (typeof r.text === "string") return r.text;
+  if (Array.isArray(r.content)) {
+    return r.content.map(c => (c && c.text) || (typeof c === "string" ? c : "")).join("");
+  }
+  return JSON.stringify(r);
+}
+
+// Bash output may include warnings/log lines around the JSON body — grab last
+// JSON object/array seen in the stream.
+function parseJson(s) {
+  if (!s) return null;
+  s = String(s).trim();
+  try { return JSON.parse(s); } catch (_) {}
+  // fall back: pull the last {...} or [...] block
+  const match = s.match(/(\{[\s\S]*\}|\[[\s\S]*\])\s*$/);
+  if (match) {
+    try { return JSON.parse(match[1]); } catch (_) {}
+  }
+  return null;
+}
+
+// ----- rendering ----------------------------------------------------------
+
+function fmtTime(s) {
+  if (!s) return "—";
+  // Treat naive timestamps as UTC
+  const d = new Date(/Z$|\+/.test(s) ? s : s + "Z");
+  if (isNaN(d)) return s;
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return "just now";
+  if (diff < 3600) return Math.floor(diff/60) + "m ago";
+  if (diff < 86400) return Math.floor(diff/3600) + "h ago";
+  if (diff < 86400*7) return Math.floor(diff/86400) + "d ago";
+  return d.toLocaleDateString();
+}
+
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]
+  ));
+}
+
+async function loadStatus() {
+  const out = parseJson(await runScript("status.py")) || {};
+  const stats = document.getElementById("header-stats");
+  stats.innerHTML = `
+    <span><strong>${out.raw_items ?? 0}</strong> items</span>
+    <span><strong>${out.active_claims ?? 0}</strong> claims</span>
+    <span><strong>${out.concepts ?? 0}</strong> concepts</span>
+    <span><strong>${out.pending_suggestions ?? 0}</strong> drafts pending</span>`;
+  const meta = document.getElementById("header-meta");
+  meta.textContent = `last refreshed ${fmtTime(new Date().toISOString())}`;
+
+  // staleness banner
+  const stale = document.getElementById("staleness");
+  const last = (out.recent_audit || []).find(a => a.action === "ingest" || a.action === "decay");
+  if (out.raw_items === 0) {
+    stale.innerHTML = `<div class="stale">No data yet. Run <code class="inline">/cycle</code> in chat to do a first pass, or wait for the scheduled task.</div>`;
+  } else if (last && (Date.now() - new Date(last.created_at + "Z")) > 86400*1000) {
+    stale.innerHTML = `<div class="stale">Last cycle was over a day ago. The scheduled task may not be firing — check it in your Cowork settings.</div>`;
+  } else {
+    stale.innerHTML = "";
+  }
+
+  // overview top trends
+  const trendsBox = document.getElementById("overview-trends");
+  if (!out.top_trends || out.top_trends.length === 0) {
+    trendsBox.innerHTML = `<div class="empty">No trends yet.</div>`;
+  } else {
+    trendsBox.innerHTML = out.top_trends.slice(0, 8).map(t => `
+      <div class="card-row">
+        <span class="momentum">${(t.momentum ?? 0).toFixed(2)}</span>
+        <span style="flex:1">${escapeHtml(t.name)}</span>
+      </div>`).join("");
+  }
+}
+
+async function loadOverviewSuggestions() {
+  const list = parseJson(await runScript("list_suggestions.py --limit 4")) || [];
+  const box = document.getElementById("overview-suggestions");
+  if (!list.length) { box.innerHTML = `<div class="empty">No drafts yet.</div>`; return; }
+  box.innerHTML = list.map(s => `
+    <div class="suggestion${s.feedback ? " " + s.feedback : ""}">
+      <div class="row-meta">
+        <span class="pill kind">${escapeHtml(s.kind)}</span>
+        ${s.callback_to ? `<span class="pill callback">callback → ${escapeHtml(s.callback_to)}</span>` : ""}
+        <span style="float:right">${fmtTime(s.created_at)}</span>
+      </div>
+      <h3>${escapeHtml(s.headline)}</h3>
+      <p class="body">${escapeHtml((s.body||"").slice(0, 220))}${(s.body||"").length > 220 ? "…" : ""}</p>
+    </div>`).join("");
+}
+
+async function loadTrends() {
+  const out = parseJson(await runScript("list_concepts.py --with-claims --limit 50")) || [];
+  const box = document.getElementById("trends-list");
+  if (!out.length) { box.innerHTML = `<div class="empty">No trends yet — run /cycle to do a pass.</div>`; return; }
+  box.innerHTML = out.map(c => {
+    const claims = (c.claims || []).slice(0, 3).map(cl => `
+      <div>${escapeHtml(cl.text)} <span class="row-meta">[${escapeHtml(cl.stance)}]</span></div>`).join("");
+    return `
+      <details class="card">
+        <summary>
+          <span class="momentum">${(c.momentum ?? 0).toFixed(2)}</span>
+          ${escapeHtml(c.name)}
+          <span class="row-meta" style="float:right">${c.occurrences ?? 0}× seen</span>
+        </summary>
+        <div class="evidence">${claims || '<div class="row-meta">no active claims</div>'}</div>
+      </details>`;
+  }).join("");
+}
+
+async function loadSuggestions() {
+  const list = parseJson(await runScript("list_suggestions.py --limit 30")) || [];
+  const box = document.getElementById("suggestions-list");
+  if (!list.length) { box.innerHTML = `<div class="empty">No drafts yet.</div>`; return; }
+  box.innerHTML = list.map(s => `
+    <article class="suggestion${s.feedback ? " " + s.feedback : ""}" data-id="${s.id}">
+      <div class="row-meta">
+        <span class="pill kind">${escapeHtml(s.kind)}</span>
+        ${s.callback_to ? `<span class="pill callback">callback → ${escapeHtml(s.callback_to)}</span>` : ""}
+        <span style="float:right">${fmtTime(s.created_at)}</span>
+      </div>
+      <h3>${escapeHtml(s.headline)}</h3>
+      <p class="body">${escapeHtml(s.body || "")}</p>
+      <p class="rationale"><strong>Why:</strong> ${escapeHtml(s.rationale || "")}</p>
+      ${s.feedback ? `
+        <div class="row-meta" style="margin-top:8px">
+          Feedback: <strong>${escapeHtml(s.feedback)}</strong> — used to nudge source reliability.
+        </div>` : `
+        <div class="actions">
+          <button class="btn primary" data-action="accepted" data-id="${s.id}">Accept (boost sources)</button>
+          <button class="btn danger"  data-action="rejected" data-id="${s.id}">Reject (penalise sources)</button>
+        </div>`}
+    </article>`).join("");
+  // Wire feedback buttons
+  box.querySelectorAll("button[data-action]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      btn.disabled = true; btn.textContent = "Saving…";
+      const id = btn.dataset.id, action = btn.dataset.action;
+      const result = parseJson(await runScript(`feedback_suggestion.py --id ${id} --action ${action}`));
+      if (result && result.action) {
+        await loadSuggestions();
+        await loadStatus();
+      } else {
+        btn.disabled = false;
+        btn.textContent = action === "accepted" ? "Accept" : "Reject";
+        alert("Couldn't save feedback — see the audit tab.");
+      }
+    });
+  });
+}
+
+async function loadSources() {
+  const out = parseJson(await runScript("list_sources.py --with-counts --all")) || [];
+  const box = document.getElementById("sources-list");
+  if (!out.length) { box.innerHTML = `<div class="empty">No sources configured.</div>`; return; }
+  box.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Kind</th><th>Handle</th><th>Reliability</th><th>Items</th><th>Last fetch</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+      ${out.map(s => `
+        <tr style="${s.enabled ? '' : 'opacity:0.5'}">
+          <td><code class="inline">${escapeHtml(s.kind)}</code></td>
+          <td>${escapeHtml(s.handle)}</td>
+          <td>${(s.reliability ?? 0.5).toFixed(2)}</td>
+          <td>${s.n_items ?? 0}</td>
+          <td class="row-meta">${s.last_fetch_at ? fmtTime(s.last_fetch_at) : "never"}</td>
+          <td>${s.enabled ? "active" : "disabled"}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>`;
+}
+
+async function loadAudit() {
+  const list = parseJson(await runScript("list_audit.py --limit 200")) || [];
+  const box = document.getElementById("audit-list");
+  if (!list.length) { box.innerHTML = `<div class="empty">No audit events yet.</div>`; return; }
+  box.innerHTML = `
+    <table>
+      <thead><tr><th>Time</th><th>Action</th><th>Detail</th></tr></thead>
+      <tbody>
+      ${list.map(e => `
+        <tr>
+          <td class="row-meta" style="white-space:nowrap">${fmtTime(e.created_at)}</td>
+          <td><code class="inline">${escapeHtml(e.action)}</code></td>
+          <td>${escapeHtml(e.detail || "")}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>`;
+}
+
+// ----- tab switching ------------------------------------------------------
+
+const tabLoaders = {
+  overview: () => Promise.all([loadStatus(), loadOverviewSuggestions()]),
+  trends: () => loadTrends(),
+  suggestions: () => loadSuggestions(),
+  sources: () => loadSources(),
+  audit: () => loadAudit(),
+};
+const loaded = new Set();
+
+function showTab(name) {
+  document.querySelectorAll(".nav button").forEach(b =>
+    b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p =>
+    p.classList.toggle("active", p.id === "panel-" + name));
+  if (!loaded.has(name)) {
+    loaded.add(name);
+    Promise.resolve(tabLoaders[name]()).catch(err => {
+      const panel = document.getElementById("panel-" + name);
+      panel.insertAdjacentHTML("afterbegin",
+        `<div class="error">Couldn't load: ${escapeHtml(err.message || String(err))}</div>`);
+    });
+  }
+}
+
+document.querySelectorAll(".nav button").forEach(b =>
+  b.addEventListener("click", () => showTab(b.dataset.tab)));
+
+// initial load
+showTab("overview");
+</script>
+</body>
+</html>

@@ -89,11 +89,23 @@ In Cowork mode, run the cycle yourself: invoke `/cycle` (you can do this directl
 
 If you can't invoke another slash command directly, just run the cycle steps inline using bash (the steps are documented in `.claude/commands/cycle.md`).
 
-## Step 7 — Hand off
+## Step 7 — Create the dashboard artifact
+
+Run `/view` (or do its steps inline if you can't call slash commands recursively). This creates the **signal-brain** Cowork artifact — a live page the user can re-open any time to see trends, drafts, sources, and the audit log. The dashboard fetches fresh data from `scripts/*.py` every time it loads, so it's always current.
+
+The atomic flow:
+- Read `signal_brain/dashboard_template.html`.
+- Substitute `__SB_REPO_PATH__` with the absolute repo path.
+- Write to `data/dashboard.html`.
+- Call `mcp__cowork__create_artifact` with id `signal-brain`, that path, and `mcp_tools=["mcp__workspace__bash"]`.
+
+If `mcp__cowork__create_artifact` isn't available in this Cowork version, skip and tell the user: "Dashboard creation needs a Cowork version with artifact support. You can still use `/status` in chat, or run the FastAPI fallback locally."
+
+## Step 8 — Hand off
 
 Tell the user, in one short paragraph:
 
-> Done. Your agent is set up and the first cycle just ran — you should see trends and post drafts above. The scheduled task will refresh every <interval> from now on. To check progress any time, just ask me ("how's my agent doing?") and I'll run a status report. If you want a visual dashboard, you can run `./setup.sh && .venv/bin/python scripts/serve.py` in your terminal — but it's optional.
+> Done. Your agent is set up and the first cycle just ran — you should see trends and post drafts above. The scheduled task will refresh every <interval> from now on. To check progress any time, just ask me ("how's my agent doing?") and I'll run a status report. To open the dashboard, type `/view` — it creates a live Cowork artifact you can re-open any time.
 
 ## What NOT to do
 
