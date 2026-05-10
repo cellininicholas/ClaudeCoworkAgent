@@ -48,6 +48,28 @@ tasks".
 | Daily morning        | Cheapest. You see your digest with morning coffee.         |
 | Hourly               | Only if you want to react to news in near-real-time.       |
 
+## How fetching works in Cowork mode
+
+The Cowork sandbox's outbound HTTP proxy blocks most public APIs by default —
+running `httpx.get('https://...')` from a sandbox bash call mostly returns 403.
+This means the legacy `scripts/fetch.py` (which does direct httpx calls) does
+not work in Cowork mode.
+
+The cycle prompt (`.claude/commands/cycle.md`) handles this by using Claude's
+own **WebFetch** tool for the fetch step instead of `fetch.py`. WebFetch has a
+much wider allowlist and is the right network layer for an LLM-driven agent.
+The cycle:
+
+1. Calls `python3 scripts/list_sources.py` to get each enabled source's
+   `fetch_url` and `format`.
+2. Calls `WebFetch` on each `fetch_url` with a prompt to extract recent items
+   as JSON.
+3. Calls `python3 scripts/save_raw_item.py` for each new item (content-hash
+   dedup makes re-runs safe).
+
+`scripts/fetch.py` remains for direct-API mode, where the host venv has
+unrestricted network access.
+
 ## Cost note
 
 In **Cowork mode (default):** zero direct API spend — the cycle uses your
