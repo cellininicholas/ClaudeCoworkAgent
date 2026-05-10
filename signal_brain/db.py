@@ -10,11 +10,29 @@ from . import config
 
 
 def connect() -> sqlite3.Connection:
+    """Open a SQLite connection.
+
+    Default journal mode is MEMORY + synchronous=OFF — this is the only mode
+    that works reliably on virtiofs/FUSE mounts (Cowork's sandbox mounts the
+    project folder this way, and SQLite's WAL mode requires fsync semantics
+    that FUSE doesn't fully provide). The trade-off is that a process crash
+    could lose the last few rows; for a single-user tool that runs every few
+    hours, that's fine.
+
+    Power users on a real local filesystem who want WAL can set
+    SIGNAL_BRAIN_JOURNAL_MODE=WAL in their environment.
+    """
     config.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(config.DB_PATH, isolation_level=None)  # autocommit
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
-    conn.execute("PRAGMA journal_mode = WAL")
+    import os
+    mode = os.environ.get("SIGNAL_BRAIN_JOURNAL_MODE", "MEMORY").upper()
+    if mode == "WAL":
+        conn.execute("PRAGMA journal_mode = WAL")
+    else:
+        conn.execute("PRAGMA journal_mode = MEMORY")
+        conn.execute("PRAGMA synchronous = OFF")
     return conn
 
 
